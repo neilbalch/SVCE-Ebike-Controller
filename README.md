@@ -2,7 +2,7 @@
 
 ## Description
 
-STM32 Blue Pill (*STM32 F103C8*) powered Ebike controller made for the [Silicon Valley Clean Energy](https://www.svcleanenergy.org/) Ebike Competition.
+STM32 Blue Pill (*STM32 F103C8*) powered Ebike controller made for the [Silicon Valley Clean Energy](https://www.svcleanenergy.org/) Ebike Competition. This program is developed in conunction with the [PlatformIO](https://platformio.org/) system, a substantial upgrade from the oxymoron Arduino IDE.
 
 Relevant Peripherals:
 
