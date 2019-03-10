@@ -2,13 +2,15 @@
 #include <HardwareSerial.h>  // For Serial
 #include <MPU6050_tockn.h>   // For MPU6050 (I2C)
 #include <SD.h>              // For SD Card
-#include <SPI.h>             // For SD Card
 #include <VescUart.h>        // For VESC
 #include <Wire.h>            // For MPU6050 (I2C)
 #include "config.h"
 
 // 6DOF Accelerometer/Gyro
 MPU6050 mpu6050(Wire);
+
+// VESC
+VescUart vesc;
 
 // Path to currently in-use log file
 String logFile = "";
@@ -34,6 +36,7 @@ struct State {
   float gyroX, gyroY, gyroZ;  // Units: rad/s
 
   // Power Consumption (from VESC)
+  long rpm;
   float motorPower, inputPower;      // Units: W
   float motorVoltage, inputVoltage;  // Units: V
   float motorCurrent, inputCurrent;  // Units: A
@@ -48,8 +51,8 @@ struct State {
   inline String generateLogLine() {
     return (String)time + ", " + (String)accX + ", " + (String)accY + ", " +
            (String)accZ + ", " + (String)gyroX + ", " + (String)gyroY + ", " +
-           (String)gyroZ + ", " + (String)motorPower + ", " +
-           (String)inputPower + ", " + (String)motorVoltage + ", " +
+           (String)gyroZ + ", " + (String)rpm + ", " + (String)motorPower +
+           ", " + (String)inputPower + ", " + (String)motorVoltage + ", " +
            (String)inputVoltage + ", " + (String)motorCurrent + ", " +
            (String)inputCurrent + ", " + (enabled ? "true" : "false") + ", " +
            (String)targetRPM + ", " + (String)targetW + ", " +
@@ -93,13 +96,19 @@ void setup() {
   File log = SD.open(logFile, FILE_WRITE);
   if (log) {
     log.println(
-        "time, accX, accY, accZ, gyroX, gyroY, gyroZ, motorPower, inputPower, "
-        "motorVoltage, inputVoltage, motorCurrent, inputCurrent, enabled, "
-        "targetRPM, targetW, throttleVoltage");
+        "time, accX, accY, accZ, gyroX, gyroY, gyroZ, rpm, motorPower, "
+        "inputPower, motorVoltage, inputVoltage, motorCurrent, inputCurrent, "
+        "enabled, targetRPM, targetW, throttleVoltage");
     log.close();
     logMsg("Header Line Written");
   } else
     logErr("Error opening " + (String)logFile);
+
+  // Init VESC
+  Serial1.begin(19200);
+  while (!Serial1) {
+  }
+  vesc.setSerialPort(&Serial);
 }
 
 void loop() {
@@ -116,14 +125,26 @@ void loop() {
     state.gyroZ = mpu6050.getGyroZ() * (PI / 180);
   }
 
-  // TODO(Neil): Implement VESC Telemetry Recording Here
   {  // Populate VESC state fields
-    state.motorPower = 0;
-    state.inputPower = 0;
-    state.motorVoltage = 0;
-    state.inputVoltage = 0;
-    state.motorCurrent = 0;
-    state.inputCurrent = 0;
+    if (vesc.getVescValues()) {
+      state.rpm = vesc.data.rpm;
+      state.motorVoltage =
+          vesc.data.inpVoltage;  // It's the same. BLDC ESCs drive the same
+                                 // voltage, just changing pulse times
+      state.inputVoltage = vesc.data.inpVoltage;
+      state.motorCurrent = vesc.data.avgMotorCurrent;
+      state.inputCurrent = vesc.data.avgInputCurrent;
+      state.motorPower = state.motorVoltage * state.motorCurrent;
+      state.inputPower = state.inputVoltage * state.inputCurrent;
+    } else {
+      state.rpm = 0;
+      state.motorPower = 0;
+      state.inputPower = 0;
+      state.motorVoltage = 0;
+      state.inputVoltage = 0;
+      state.motorCurrent = 0;
+      state.inputCurrent = 0;
+    }
   }
 
   // Read throttle voltage
@@ -134,12 +155,10 @@ void loop() {
 
   // Are we enabled?
   if (throttle < THROTTLE_CUTOFF) {  // Disabled
-    // logMsg("Disabled");
     state.enabled = false;
     state.targetRPM = 0.0;
     state.targetW = 0.0;
   } else {  // Enabled
-    // logMsg("Enabled");
     state.enabled = true;
 
     // Compute the desired throttle setting
@@ -148,7 +167,8 @@ void loop() {
     state.targetRPM = rpm;
     state.targetW = rpm * 2 * PI / 60;
 
-    // TODO(Neil): Send target RPM to ESC
+    // TODO(Neil): Do I need to send current? brakeCurrent?
+    vesc.setRPM(rpm);
   }
 
   // Write state info to SD file, log to serial
