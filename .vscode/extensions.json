@@ -2,14 +2,6 @@
 	// See http://go.microsoft.com/fwlink/?LinkId=827846
 	// for the documentation about the extensions.json format
 	"recommendations": [
-		"platformio.platformio-ide",
-		"hookyqr.beautify",
-		"ms-vscode.cpptools",
-		"streetsidesoftware.code-spell-checker",
-		"eamodio.gitlens",
-		"davidanson.vscode-markdownlint",
-		"christian-kohler.path-intellisense",
-		"vscodevim.vim",
-		"robertohuertasm.vscode-icons"
+		"platformio.platformio-ide"
 	]
 }
