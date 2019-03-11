@@ -6,15 +6,6 @@
 #include <Wire.h>            // For MPU6050 (I2C)
 #include "config.h"
 
-// 6DOF Accelerometer/Gyro
-MPU6050 mpu6050(Wire);
-
-// VESC
-VescUart vesc;
-
-// Path to currently in-use log file
-String logFile = "";
-
 // Log the debug message only if the DEBUG flag is set
 inline void logMsg(String msg) {
   if (DEBUG) Serial.println("DEBUG: " + msg);
@@ -27,6 +18,7 @@ inline float mapFloat(float x, float in_min, float in_max, float out_min,
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
+// Structure to hold sensor values and goals
 struct State {
   // Powered Time
   unsigned long time;  // Units: ms
@@ -59,10 +51,15 @@ struct State {
            (String)throttleVoltage;
   }
 };
+
+// Global objects
+MPU6050 mpu6050(Wire);  // 6DOF Accelerometer/Gyro
+VescUart vesc;          // VESC
+String logFile = "";    // Path to currently in-use log file
 State state;
 
 void setup() {
-  // Init Serial
+  // Init USB Serial
   Serial.begin(250000);
 
   // Init I2C and MPU6050
@@ -150,7 +147,6 @@ void loop() {
   // Read throttle voltage
   float throttle =
       analogRead(THROTTLE_PIN) * (5.0 /* V*/ / 4095.0 /* steps */);  // Units: V
-  // logMsg("Throttle Voltage: " + (String)throttle);
   state.throttleVoltage = throttle;
 
   // Are we enabled?
