@@ -105,7 +105,7 @@ void setup() {
   Serial1.begin(19200);
   while (!Serial1) {
   }
-  vesc.setSerialPort(&Serial);
+  vesc.setSerialPort(&Serial1);
 }
 
 void loop() {
