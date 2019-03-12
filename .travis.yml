@@ -24,21 +24,25 @@
 # Template #1: General project. Test it using existing `platformio.ini`.
 #
 
-# language: python
-# python:
-#     - "2.7"
-#
-# sudo: false
-# cache:
-#     directories:
-#         - "~/.platformio"
-#
-# install:
-#     - pip install -U platformio
-#     - platformio update
-#
-# script:
-#     - platformio run
+language: python
+python:
+    - "2.7"
+
+sudo: false
+cache:
+    directories:
+        - "~/.platformio"
+
+env:
+    - PLATFORMIO_CI_SRC = src/main.cpp
+
+install:
+    - pip install -U platformio
+    - platformio update
+
+script:
+    - platformio run
+    - platformio ci --board=<sparkfun_promicro16> --board=<genericSTM32F103C8>
 
 
 #
