@@ -38,7 +38,6 @@ env:
 
 install:
     - pip install -U platformio
-    - platformi
     #
     # Libraries from PlatformIO Library Registry:
     #
