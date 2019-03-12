@@ -38,7 +38,14 @@ env:
 
 install:
     - pip install -U platformio
-    - platformio update
+    - platformi
+    #
+    # Libraries from PlatformIO Library Registry:
+    #
+    # http://platformio.org/#!/lib/show/1/OneWire
+    platformio lib install 2824 # MPU6050_tockn
+    platformio lib install 5830 # VescUart
+    platformio lib install 868  # SD
 
 script:
     - platformio run
