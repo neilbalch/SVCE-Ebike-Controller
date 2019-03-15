@@ -26,30 +26,30 @@
 
 language: python
 python:
-    - "2.7"
+  - "2.7"
 
 sudo: false
 cache:
-    directories:
-        - "~/.platformio"
+  directories:
+    - "~/.platformio"
 
 env:
-    - PLATFORMIO_CI_SRC = src/main.cpp
+  - PLATFORMIO_CI_SRC = src/main.cpp
 
 install:
-    - pip install -U platformio
+  - pip install -U platformio
 
-    # Libraries from PlatformIO Library Registry:
-    # - platformio lib -g install 2824 # MPU6050_tockn
-    - wget https://github.com/neilbalch/mpu6050_tockn/archive/master.zip -O /tmp/mpu6050_tockn.zip
-    - unzip /tmp/mpu6050_tockn.zip -d /tmp
+  # Libraries from PlatformIO Library Registry:
+  # - platformio lib -g install 2824 # MPU6050_tockn
+  - wget https://github.com/neilbalch/mpu6050_tockn/archive/master.zip -O /tmp/mpu6050_tockn.zip
+  - unzip /tmp/mpu6050_tockn.zip -d /tmp
 
-    - platformio lib -g install 5830 # VescUart
-    - platformio lib -g install 868  # SD
+  - platformio lib -g install 5830 # VescUart
+  - platformio lib -g install 868  # SD
 
 script:
-    - platformio run
-    - platformio ci --board=<genericSTM32F103C8>
+  - platformio run
+  - platformio ci --board=<genericSTM32F103C8>
 
 
 #
