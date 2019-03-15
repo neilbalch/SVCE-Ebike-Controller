@@ -138,27 +138,22 @@ void loop() {
     }
   }
 
-  // Read throttle voltage
-  float throttle =
-      analogRead(THROTTLE_PIN) * (5.0 /* V*/ / 4095.0 /* steps */);  // Units: V
-  state.throttleVoltage = throttle;
+  // Read throttle voltage and decide whether or not to enable
+  state.throttleVoltage = analogRead(THROTTLE_PIN) * THROTTLE_CONVERSION;
+  state.enabled = state.throttleVoltage > THROTTLE_CUTOFF ? true : false;
 
-  // Are we enabled?
-  if (throttle < THROTTLE_CUTOFF) {  // Disabled
-    state.enabled = false;
+  if (state.enabled) {
     state.targetRPM = 0.0;
     state.targetW = 0.0;
-  } else {  // Enabled
-    state.enabled = true;
-
+  } else {
     // Compute the desired throttle setting
-    float rpm = mapFloat(throttle, THROTTLE_LOW, THROTTLE_HIGH, 0, MAX_RPM);
-    constrain(rpm, 0, MAX_RPM);  // Should be extranous, but just make sure
-    state.targetRPM = rpm;
-    state.targetW = rpm * 2 * PI / 60;
+    state.rpm = mapFloat(state.throttleVoltage, THROTTLE_LOW, THROTTLE_HIGH, 0,
+                         MAX_RPM);
+    constrain(state.rpm, 0, MAX_RPM);  // Should be extranous, but just make sure
+    state.targetW = state.rpm * 2 * PI / 60;
 
     // TODO(Neil): Do I need to send current? brakeCurrent?
-    vesc.setRPM(rpm);
+    vesc.setRPM(state.rpm);
   }
 
   // Write state info to SD file, log to serial
