@@ -41,15 +41,13 @@ install:
 
   # Libraries from PlatformIO Library Registry:
   # - platformio lib -g install 2824 # MPU6050_tockn
-  - wget https://github.com/neilbalch/mpu6050_tockn/archive/master.zip -O /tmp/mpu6050_tockn.zip
-  - unzip /tmp/mpu6050_tockn.zip -d /tmp
 
   - platformio lib -g install 5830 # VescUart
   - platformio lib -g install 868  # SD
 
 script:
   - platformio run
-  - platformio ci --board=<genericSTM32F103C8>
+  # - platformio ci --board=<genericSTM32F103C8>
 
 
 #
