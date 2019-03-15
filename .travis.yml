@@ -40,14 +40,14 @@ install:
   - pip install -U platformio
 
   # Libraries from PlatformIO Library Registry:
-  # - platformio lib -g install 2824 # MPU6050_tockn
+  # - platformio lib -g install 2824 # MPU6050_tockn  # Not required, library hosted locally
 
   - platformio lib -g install 5830 # VescUart
   - platformio lib -g install 868  # SD
 
 script:
   - platformio run
-  # - platformio ci --board=<genericSTM32F103C8>
+  # - platformio ci --board=<genericSTM32F103C8>  # Broken command, fails the CI run
 
 
 #
