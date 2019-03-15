@@ -149,7 +149,8 @@ void loop() {
     // Compute the desired throttle setting
     state.rpm = mapFloat(state.throttleVoltage, THROTTLE_LOW, THROTTLE_HIGH, 0,
                          MAX_RPM);
-    constrain(state.rpm, 0, MAX_RPM);  // Should be extranous, but just make sure
+    constrain(state.rpm, 0,
+              MAX_RPM);  // Should be extranous, but just make sure
     state.targetW = state.rpm * 2 * PI / 60;
 
     // TODO(Neil): Do I need to send current? brakeCurrent?

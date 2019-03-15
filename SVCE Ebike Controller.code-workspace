@@ -14,6 +14,20 @@
 			"millis",
 			"println",
 			"vesc"
-		]
+		],
+		"editor.tabSize": 2,
+		"editor.mouseWheelZoom": true,
+		"editor.parameterHints.cycle": true,
+		"editor.tabCompletion": "on",
+		"editor.fontSize": 12,
+		"files.insertFinalNewline": true,
+		"breadcrumbs.enabled": true,
+		"workbench.settings.useSplitJSON": true,
+		"search.showLineNumbers": true,
+		"terminal.integrated.cursorBlinking": true,
+		"C_Cpp.clang_format_fallbackStyle": "Google",
+		"C_Cpp.clang_format_sortIncludes": true,
+		"C_Cpp.default.cppStandard": "c++11",
+		"C_Cpp.default.cStandard": "c11",
 	}
 }
