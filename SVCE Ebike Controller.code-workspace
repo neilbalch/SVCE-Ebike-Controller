@@ -11,6 +11,8 @@
 			"PLATFORMIO_CALLER": "vscode"
 		},
 		"cSpell.words": [
+			"bldc",
+			"escs",
 			"millis",
 			"println",
 			"vesc"

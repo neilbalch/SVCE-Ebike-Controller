@@ -49,7 +49,7 @@ State state;
 
 void setup() {
   // Init USB Serial
-  Serial.begin(250000);
+  Serial.begin(USB_BAUD);
 
   {  // Init I2C and MPU6050
     Wire.begin();
@@ -127,14 +127,16 @@ void loop() {
       state.inputCurrent = vesc.data.avgInputCurrent;
       state.motorPower = state.motorVoltage * state.motorCurrent;
       state.inputPower = state.inputVoltage * state.inputCurrent;
-    } else {
-      state.rpm = 0;
-      state.motorPower = 0;
-      state.inputPower = 0;
-      state.motorVoltage = 0;
-      state.inputVoltage = 0;
-      state.motorCurrent = 0;
-      state.inputCurrent = 0;
+    } else {  // Error fetching new values from VESC, log the error and record
+              // null values
+      logErr("Couldn't fetch new VESC state values");
+      state.rpm = 0.0;
+      state.motorVoltage = 0.0;
+      state.inputVoltage = 0.0;
+      state.motorCurrent = 0.0;
+      state.inputCurrent = 0.0;
+      state.motorPower = 0.0;
+      state.inputPower = 0.0;
     }
   }
 
@@ -143,18 +145,16 @@ void loop() {
   state.enabled = state.throttleVoltage > THROTTLE_CUTOFF ? true : false;
 
   if (state.enabled) {
-    state.targetRPM = 0.0;
-    state.targetW = 0.0;
-  } else {
     // Compute the desired throttle setting
-    state.rpm = mapFloat(state.throttleVoltage, THROTTLE_LOW, THROTTLE_HIGH, 0,
-                         MAX_RPM);
-    constrain(state.rpm, 0,
-              MAX_RPM);  // Should be extranous, but just make sure
-    state.targetW = state.rpm * 2 * PI / 60;
+    state.targetRPM = mapFloat(state.throttleVoltage, THROTTLE_LOW,
+                               THROTTLE_HIGH, 0, MAX_RPM);
+    state.targetW = state.targetRPM * 2 * PI / 60;
 
     // TODO(Neil): Do I need to send current? brakeCurrent?
     vesc.setRPM(state.rpm);
+  } else {  // Disabled, record null goals
+    state.targetRPM = 0.0;
+    state.targetW = 0.0;
   }
 
   // Write state info to SD file, log to serial
