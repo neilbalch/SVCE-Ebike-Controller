@@ -22,11 +22,13 @@ Relevant Peripherals:
 
 #### `MPU6050_tockn`
 
-Unfortunately, at the time of writing, the stock `MPU6050_tockn` library has [an issue when built for the STM32 F103C8](https://community.platformio.org/t/stm32f1-compilation-erring-upon-calling-wire-library/6911/13). To fix this, the calls to `wire->requestFrom` in the library's code must be changed by removing the last `(int)true` parameter wherever it appears.
+~~Unfortunately, at the time of writing, the stock `MPU6050_tockn` library has [an issue when built for the STM32 F103C8](https://community.platformio.org/t/stm32f1-compilation-erring-upon-calling-wire-library/6911/13). To fix this, the calls to `wire->requestFrom` in the library's code must be changed by removing the last `(int)true` parameter wherever it appears.~~
 
-*i.e.*: `wire->requestFrom((int)MPU6050_ADDR, 14, (int) true);` --> `wire->requestFrom((int)MPU6050_ADDR, 14);`
+~~*i.e.*: `wire->requestFrom((int)MPU6050_ADDR, 14, (int) true);` --> `wire->requestFrom((int)MPU6050_ADDR, 14);`~~
 
-***NOTE:*** This is currently fixed in the local version of the `MPU6050_tockn` library. No need to make any changes.
+~~***NOTE:*** This is currently fixed in the local version of the `MPU6050_tockn` library. No need to make any changes.~~
+
+These changes are addressed as of `MOU6050_tockn@>1.5.1`.
 
 #### PlatformIO STM32 linker scripts
 
