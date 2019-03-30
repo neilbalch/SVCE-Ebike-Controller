@@ -95,7 +95,7 @@ void setup() {
   }
 
   {  // Init VESC
-    Serial1.begin(19200);
+    Serial1.begin(115200);
     while (!Serial1) {
     }
     vesc.setSerialPort(&Serial1);
@@ -170,3 +170,31 @@ void loop() {
   // Generate the loop time delay
   delay(1000 / LOOP_SPEED);
 }
+
+// #include <Arduino.h>
+// #include <HardwareSerial.h>
+// #include <VescUart.h>
+
+// #define VESC_USART Serial1
+
+// VescUart UART;
+
+// void setup() {
+//   Serial.begin(9600);
+//   VESC_USART.begin(115200);
+//   // while (!Serial) {;}
+//   UART.setSerialPort(&VESC_USART);
+// }
+
+// void loop() {
+//   if (UART.getVescValues() ) {
+//     Serial.println(UART.data.rpm);
+//     Serial.println(UART.data.inpVoltage);
+//     Serial.println(UART.data.ampHours);
+//     Serial.println(UART.data.tachometerAbs);
+//   } else {
+//     Serial.println((String)millis() + " Failed to get data!");
+//   }
+
+//   delay(50);
+// }
