@@ -15,6 +15,7 @@
 			"escs",
 			"millis",
 			"println",
+			"usart",
 			"vesc"
 		],
 		"editor.tabSize": 2,

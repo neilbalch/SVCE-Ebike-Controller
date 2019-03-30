@@ -1,6 +1,8 @@
-#define LOOP_SPEED 200   // x cycles/sec
-#define DEBUG true       // Print serial messages?
-#define USB_BAUD 250000  // Baud rate for the USB serial port
+#define LOOP_SPEED 200      // x cycles/sec
+#define DEBUG true          // Print serial messages?
+#define USB_BAUD 250000     // Baud rate for the USB serial port
+#define VESC_BAUD 115200    // Baud rate for the VESC serial port
+#define VESC_USART Serial1  // UART port for the VESC
 
 #define SD_CS_PIN PA4  // Pin associated with the SD Card CS line
 

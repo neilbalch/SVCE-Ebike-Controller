@@ -95,10 +95,10 @@ void setup() {
   }
 
   {  // Init VESC
-    Serial1.begin(115200);
-    while (!Serial1) {
+    VESC_USART.begin(VESC_BAUD);
+    while (!VESC_USART) {
     }
-    vesc.setSerialPort(&Serial1);
+    vesc.setSerialPort(&VESC_USART);
   }
 }
 
@@ -144,57 +144,32 @@ void loop() {
   state.throttleVoltage = analogRead(THROTTLE_PIN) * THROTTLE_CONVERSION;
   state.enabled = state.throttleVoltage > THROTTLE_CUTOFF ? true : false;
 
-  if (state.enabled) {
-    // Compute the desired throttle setting
-    state.targetRPM = mapFloat(state.throttleVoltage, THROTTLE_LOW,
-                               THROTTLE_HIGH, 0, MAX_RPM);
-    state.targetW = state.targetRPM * 2 * PI / 60;
+  {  // Deal with sending goals to ESC
+    if (state.enabled) {
+      // Compute the desired throttle setting
+      state.targetRPM = mapFloat(state.throttleVoltage, THROTTLE_LOW,
+                                 THROTTLE_HIGH, 0, MAX_RPM);
+      state.targetW = state.targetRPM * 2 * PI / 60;
 
-    // TODO(Neil): Do I need to send current? brakeCurrent?
-    vesc.setRPM(state.rpm);
-  } else {  // Disabled, record null goals
-    state.targetRPM = 0.0;
-    state.targetW = 0.0;
+      // TODO(Neil): Do I need to send current? brakeCurrent?
+      vesc.setRPM(state.rpm);
+    } else {  // Disabled, record null goals
+      state.targetRPM = 0.0;
+      state.targetW = 0.0;
+    }
   }
 
-  // Write state info to SD file, log to serial
-  File log = SD.open(logFile, FILE_WRITE);
-  if (log) {
-    String msg = state.generateLogLine();
-    logMsg(msg);
-    log.println(msg);
-    log.close();
-  } else
-    logErr("Error opening " + (String)logFile);
+  {  // Write state info to SD file, log to serial
+    File log = SD.open(logFile, FILE_WRITE);
+    if (log) {
+      String msg = state.generateLogLine();
+      logMsg(msg);
+      log.println(msg);
+      log.close();
+    } else
+      logErr("Error opening " + (String)logFile);
+  }
 
   // Generate the loop time delay
   delay(1000 / LOOP_SPEED);
 }
-
-// #include <Arduino.h>
-// #include <HardwareSerial.h>
-// #include <VescUart.h>
-
-// #define VESC_USART Serial1
-
-// VescUart UART;
-
-// void setup() {
-//   Serial.begin(9600);
-//   VESC_USART.begin(115200);
-//   // while (!Serial) {;}
-//   UART.setSerialPort(&VESC_USART);
-// }
-
-// void loop() {
-//   if (UART.getVescValues() ) {
-//     Serial.println(UART.data.rpm);
-//     Serial.println(UART.data.inpVoltage);
-//     Serial.println(UART.data.ampHours);
-//     Serial.println(UART.data.tachometerAbs);
-//   } else {
-//     Serial.println((String)millis() + " Failed to get data!");
-//   }
-
-//   delay(50);
-// }
