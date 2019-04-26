@@ -116,13 +116,13 @@ void loop() {
       state.targetRPM = mapFloat(state.throttleVoltage, THROTTLE_LOW,
                                  THROTTLE_HIGH, 0, MAX_RPM);
       state.targetW = state.targetRPM * 2 * PI / 60;
-
-      // TODO(Neil): Do I need to send current? brakeCurrent?
-      vesc.setRPM(state.rpm);
     } else {  // Disabled, record null goals
       state.targetRPM = 0.0;
       state.targetW = 0.0;
     }
+    
+    // TODO(Neil): Do I need to send current? brakeCurrent?
+    vesc.setRPM(state.rpm);
   }
 
   {  // Write state info to SD file, log to serial
