@@ -32,32 +32,9 @@ These changes are addressed as of `MOU6050_tockn@>1.5.1`.
 
 #### PlatformIO STM32 linker scripts
 
-For some reason, the default `STSTM32` linker scripts for the generic `STM32F103C8`, the chip on the Blue Pill, assume that the the MCU has 64K of program flash memory, which is just not the case, as most boards around have 128K of flash. This shouldn't be an issue, but for the extra headroom, this is a good mod.
+For some reason, the default `STSTM32` linker scripts for the generic `STM32F103C8`, the chip on the Blue Pill, assume that the the MCU has 64K of program flash memory, which is just not the case, as most boards around have 128K of flash. This shouldn't be an issue, but for the extra headroom, this is a good mod. [Original post on PlatformIO Community forum.](https://community.platformio.org/t/stm32f1-blue-pill-stuck-in-dfu-mode-after-upload/6853/19?u=ifconfig)
 
-Mod to `[USER_DIR]\.platformio\platforms\ststm32\boards\genericSTM32F103C8.json`
-
-This line:
-
-```json
-    "maximum_size": 65536,
-```
-
-Becomes this line:
-
-```json
-    "maximum_size": 131072,
-```
-
-Mod to `[USER_DIR]\.platformio\platforms\ststm32\ldscripts\stm32f103x8.ld`
-
-This line:
-
-```
-  FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 64K
-```
-
-Becomes this line:
-
-```
-  FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 128K
-```
+| File | Original | Post-mod |
+|------|----------|----------|
+| `[USER_DIR]\.platformio\platforms\ststm32\boards\genericSTM32F103C8.json` | `"maximum_size": 65536,` | `"maximum_size": 131072,` |
+| `[USER_DIR]\.platformio\platforms\ststm32\ldscripts\stm32f103x8.ld` | `FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 64K` | `FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 128K` |
