@@ -40,7 +40,7 @@ install:
   - pip install -U platformio
 
   # Libraries from PlatformIO Library Registry:
-  - platformio lib -g install "2824@1.5.1" # MPU6050_tockn
+  - platformio lib -g install "2824" # MPU6050_tockn
   # - platformio lib -g install 5830 # VescUart, but nope. We need the development branch (stored locally)
   - platformio lib -g install 868  # SD
 
