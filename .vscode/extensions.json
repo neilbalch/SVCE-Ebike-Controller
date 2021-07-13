@@ -1,16 +1,16 @@
 {
-	// See http://go.microsoft.com/fwlink/?LinkId=827846
-	// for the documentation about the extensions.json format
-	"recommendations": [
-		"platformio.platformio-ide",
-		"hookyqr.beautify",
-		"ms-vscode.cpptools",
-		"streetsidesoftware.code-spell-checker",
-		"eamodio.gitlens",
-		"zixuanwang.linkerscript",
-		"davidanson.vscode-markdownlint",
-		"christian-kohler.path-intellisense",
-		"vscodevim.vim",
-		"vscode-icons-team.vscode-icons"
-	]
+    // See http://go.microsoft.com/fwlink/?LinkId=827846
+    // for the documentation about the extensions.json format
+    "recommendations": [
+        "christian-kohler.path-intellisense",
+        "davidanson.vscode-markdownlint",
+        "eamodio.gitlens",
+        "hookyqr.beautify",
+        "ms-vscode.cpptools",
+        "platformio.platformio-ide",
+        "streetsidesoftware.code-spell-checker",
+        "vscode-icons-team.vscode-icons",
+        "vscodevim.vim",
+        "zixuanwang.linkerscript"
+    ]
 }
